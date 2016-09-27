@@ -1,0 +1,11 @@
+{
+    "name": "koolob/serverx",
+    "description": "a php server framework",
+    "authors": [
+        {
+            "name": "koolob",
+            "email": "koolob@qq.com"
+        }
+    ],
+    "require": {}
+}
