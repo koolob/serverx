@@ -11,8 +11,7 @@
   "require": {},
   "autoload": {
     "psr-4": {
-      "Serverx\\": "src/",
-      "Serverx\\Exception\\Server*Exception": "src/Exception/ServerException.php"
+      "Serverx\\": "src/"
     }
   }
 }
