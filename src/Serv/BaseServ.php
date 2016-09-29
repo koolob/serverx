@@ -10,8 +10,8 @@ namespace Serverx\Serv;
 
 
 use Serverx\Conf\ServerConfig;
-use Serverx\Exception\AppNotFound;
-use Serverx\Exception\ServerAppDirException;
+use Serverx\Exception\App\NotFound;
+use Serverx\Exception\Server\ConfigError;
 
 abstract class BaseServ
 {
@@ -68,12 +68,12 @@ abstract class BaseServ
     {
         $controllerClassName = '\\App\\Controller\\' . ucwords($controller);
         if (!class_exists($controllerClassName, true)) {
-            throw new AppNotFound();
+            throw new NotFound("class $controllerClassName not found");
         }
         $controllerClass = new $controllerClassName($this);
         $actionMethod = $controllerClass->getActionMethod($action);
         if (!method_exists($controllerClass, $actionMethod)) {
-            throw new AppNotFound();
+            throw new NotFound("method $actionMethod not found");
         }
         return $controllerClass->$actionMethod($params);
     }
@@ -94,7 +94,7 @@ abstract class BaseServ
     private function setPID($pid)
     {
         if (!file_put_contents($this->getPidFile(), $pid)) {
-            throw new ServerAppDirException();
+            throw new ConfigError("can not write pid");
         }
     }
 

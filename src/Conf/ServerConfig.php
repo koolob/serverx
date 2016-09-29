@@ -9,6 +9,7 @@
 namespace Serverx\Conf;
 
 
+use Serverx\Exception\Server\ConfigError;
 use Serverx\Exception\ServerAppDirException;
 
 class ServerConfig
@@ -44,7 +45,7 @@ class ServerConfig
         if (file_exists($appDir)) {
             $this->appDir = $appDir;
         } else {
-            throw new ServerAppDirException();
+            throw new ConfigError("app dir $appDir not exist");
         }
     }
 
