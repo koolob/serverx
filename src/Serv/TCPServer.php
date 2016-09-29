@@ -30,6 +30,7 @@ class TCPServer extends BaseServ
             $server->on('Task', array($this, 'onTask'));
             $server->on('Finish', array($this, 'onFinish'));
         }
+        return $server;
     }
 
 
