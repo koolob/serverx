@@ -1,11 +1,17 @@
 {
-    "name": "koolob/serverx",
-    "description": "a php server framework",
-    "authors": [
-        {
-            "name": "koolob",
-            "email": "koolob@qq.com"
-        }
-    ],
-    "require": {}
+  "name": "koolob/serverx",
+  "description": "a php server framework",
+  "license": "Apache",
+  "authors": [
+    {
+      "name": "koolob",
+      "email": "koolob@qq.com"
+    }
+  ],
+  "require": {},
+  "autoload": {
+    "psr-4": {
+      "Serverx\\": "src/"
+    }
+  }
 }
