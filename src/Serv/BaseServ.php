@@ -9,6 +9,7 @@
 namespace Serverx\Serv;
 
 
+use Katzgrau\KLogger\Logger;
 use Serverx\Conf\ServerConfig;
 use Serverx\Exception\App\NotFound;
 use Serverx\Exception\Server\ConfigError;
@@ -17,10 +18,13 @@ abstract class BaseServ
 {
     private $swoole_server;
     private $serverConfig;
+    private $logger;
 
     function __construct(ServerConfig $config)
     {
         $this->serverConfig = $config;
+        $this->logger = new Logger('/var/log/serverx');
+        set_error_handler(array($this, 'errorHandle'));
     }
 
     abstract protected function initSwooleServer(ServerConfig $config);
@@ -69,6 +73,11 @@ abstract class BaseServ
 
     }
 
+    public function errorHandle($error, $error_string, $filename, $line, $symbols)
+    {
+
+    }
+
     protected function handle($controller, $action, array $params)
     {
         $controllerClassName = '\\App\\Controller\\' . ucwords($controller);
@@ -81,6 +90,11 @@ abstract class BaseServ
             throw new NotFound("method $actionMethod not found");
         }
         return $controllerClass->$actionMethod($params);
+    }
+
+    public function info($message)
+    {
+        $this->logger->info($message);
     }
 
     private function setProcessName($name)

@@ -8,7 +8,9 @@
       "email": "koolob@qq.com"
     }
   ],
-  "require": {},
+  "require": {
+    "katzgrau/klogger": "v1.2.0"
+  },
   "autoload": {
     "psr-4": {
       "Serverx\\": "src/"
