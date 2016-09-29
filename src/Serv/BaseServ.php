@@ -10,6 +10,7 @@ namespace Serverx\Serv;
 
 
 use Serverx\Conf\ServerConfig;
+use Serverx\Exception\AppNotFound;
 use Serverx\Exception\ServerAppDirException;
 
 abstract class BaseServ
@@ -61,6 +62,20 @@ abstract class BaseServ
     public function onFinish(\swoole_server $serv, $task_id, $data)
     {
 
+    }
+
+    protected function handle($controller, $action, array $params)
+    {
+        $controllerClassName = '\\App\\Controller\\' . ucwords($controller);
+        if (!class_exists($controllerClassName, true)) {
+            throw new AppNotFound();
+        }
+        $controllerClass = new $controllerClassName($this);
+        $actionMethod = $controllerClass->getActionMethod($action);
+        if (!method_exists($controllerClass, $actionMethod)) {
+            throw new AppNotFound();
+        }
+        return $controllerClass->$actionMethod($params);
     }
 
     private function setProcessName($name)

@@ -231,6 +231,11 @@ class ServerConfig
         return $this->getTaskWorkerNum() > 0;
     }
 
+    public function getControllerDir()
+    {
+        return $this->appDir . DIRECTORY_SEPARATOR . 'controllers' . DIRECTORY_SEPARATOR;
+    }
+
     public function toSwooleConfigArray()
     {
         $config = array(
