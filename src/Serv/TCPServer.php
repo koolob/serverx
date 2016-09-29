@@ -39,17 +39,17 @@ class TCPServer extends BaseServ
         return $appDir . DIRECTORY_SEPARATOR . 'run' . DIRECTORY_SEPARATOR . 'serverx.pid';
     }
 
-    protected function onConnect(\swoole_server $serv, $fd)
+    public function onConnect(\swoole_server $serv, $fd)
     {
         echo "connect $fd";
     }
 
-    protected function onReceive(\swoole_server $serv, $fd, $from_id, $data)
+    public function onReceive(\swoole_server $serv, $fd, $from_id, $data)
     {
         echo "receive $data";
     }
 
-    protected function onClose(\swoole_server $serv, $fd)
+    public function onClose(\swoole_server $serv, $fd)
     {
         echo "close $fd";
     }

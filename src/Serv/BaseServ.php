@@ -32,18 +32,18 @@ abstract class BaseServ
         $this->swoole_server->start();
     }
 
-    protected function onSwooleStart(\swoole_server $serv)
+    public function onSwooleStart(\swoole_server $serv)
     {
         $this->setProcessName("serverx-master");
         $this->setPID($serv->master_pid);
     }
 
-    protected function onSwooleShutdown(\swoole_server $serv)
+    public function onSwooleShutdown(\swoole_server $serv)
     {
         $this->delPID();
     }
 
-    protected function onWorkerStart(\swoole_server $serv, $worker_id)
+    public function onWorkerStart(\swoole_server $serv, $worker_id)
     {
         if ($serv->taskworker) {
             $this->setProcessName('serverx-tasker');
@@ -53,12 +53,12 @@ abstract class BaseServ
         echo "serverx $worker_id start at " . date("Ymd:His") . PHP_EOL;
     }
 
-    protected function onTask(\swoole_server $serv, $task_id, $from_id, $data)
+    public function onTask(\swoole_server $serv, $task_id, $from_id, $data)
     {
 
     }
 
-    protected function onFinish(\swoole_server $serv, $task_id, $data)
+    public function onFinish(\swoole_server $serv, $task_id, $data)
     {
 
     }
