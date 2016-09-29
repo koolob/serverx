@@ -37,7 +37,11 @@ class TCPServer extends BaseServ
     protected function getPidFile()
     {
         $appDir = $this->getServerConfig()->getAppDir();
-        return $appDir . DIRECTORY_SEPARATOR . 'run' . DIRECTORY_SEPARATOR . 'serverx.pid';
+        $runDir = $appDir . DIRECTORY_SEPARATOR . 'run';
+        if (!file_exists($runDir)) {
+            mkdir($runDir);
+        }
+        return $runDir . DIRECTORY_SEPARATOR . 'serverx.pid';
     }
 
     public function onConnect(\swoole_server $serv, $fd)

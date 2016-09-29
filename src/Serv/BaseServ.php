@@ -35,8 +35,13 @@ abstract class BaseServ
 
     public function onSwooleStart(\swoole_server $serv)
     {
-        $this->setProcessName("serverx-master");
-        $this->setPID($serv->master_pid);
+        try {
+            $this->setProcessName("serverx-master");
+            $this->setPID($serv->master_pid);
+        } catch (\Exception $e) {
+            $this->swoole_server->shutdown();
+            throw $e;
+        }
     }
 
     public function onSwooleShutdown(\swoole_server $serv)
