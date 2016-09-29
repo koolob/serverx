@@ -20,7 +20,6 @@ abstract class BaseServ
     function __construct(ServerConfig $config)
     {
         $this->serverConfig = $config;
-        $this->swoole_server = $this->initSwooleServer($config);
     }
 
     abstract protected function initSwooleServer(ServerConfig $config);
@@ -29,6 +28,7 @@ abstract class BaseServ
 
     public function run()
     {
+        $this->swoole_server = $this->initSwooleServer($this->getServerConfig());
         $this->swoole_server->start();
     }
 
