@@ -10,6 +10,7 @@ namespace Serverx\Serv;
 
 
 use Serverx\Conf\ServerConfig;
+use Serverx\Protocol\TCPProtocol;
 
 class TCPServer extends BaseServ
 {
@@ -36,7 +37,7 @@ class TCPServer extends BaseServ
 
     protected function getPidFile()
     {
-        $appDir = $this->getServerConfig()->getAppDir();
+        $appDir = $this->getServerConfig()->getRunDir();
         $runDir = $appDir . DIRECTORY_SEPARATOR . 'run';
         if (!file_exists($runDir)) {
             mkdir($runDir);
@@ -46,16 +47,31 @@ class TCPServer extends BaseServ
 
     public function onConnect(\swoole_server $serv, $fd)
     {
-        echo "connect $fd";
+//        echo "connect $fd";
     }
 
     public function onReceive(\swoole_server $serv, $fd, $from_id, $data)
     {
-        echo "receive $data";
+        $rev = TCPProtocol::decode($data);
+        if ($rev === 'PING') {
+            $this->sendResult($serv, $fd, 'PONG');
+        } else {
+            $this->sendResult($serv, $fd, $this->handlerReceive($rev));
+        }
     }
 
     public function onClose(\swoole_server $serv, $fd)
     {
-        echo "close $fd";
+//        echo "close $fd";
+    }
+
+    protected function handlerReceive($data)
+    {
+        return $data;
+    }
+
+    private function sendResult(\swoole_server $serv, $fd, $data)
+    {
+        $serv->send($fd, TCPProtocol::encode($data));
     }
 }

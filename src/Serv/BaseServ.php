@@ -23,7 +23,7 @@ abstract class BaseServ
     function __construct(ServerConfig $config)
     {
         $this->serverConfig = $config;
-        $this->logger = new Logger('/var/log/serverx');
+        $this->logger = new Logger($config->getLogDir());
         set_error_handler(array($this, 'errorHandle'));
     }
 
@@ -42,6 +42,7 @@ abstract class BaseServ
         try {
             $this->setProcessName("serverx-master");
             $this->setPID($serv->master_pid);
+            echo "swoole server version:" . swoole_version() . PHP_EOL;
         } catch (\Exception $e) {
             $this->swoole_server->shutdown();
             throw $e;
@@ -80,8 +81,11 @@ abstract class BaseServ
 
     protected function handle($controller, $action, array $params)
     {
-        $controllerClassName = '\\App\\Controller\\' . ucwords($controller);
-        if (!class_exists($controllerClassName, true)) {
+        $controllerClassName = '\\' . $this->getServerConfig()->getAppNamespace() . '\\Controller\\' . ucwords($controller);
+        if (!class_exists($controllerClassName)) {
+            require_once $this->getServerConfig()->getControllerDir() . ucwords($controller) . '.php';
+        }
+        if (!class_exists($controllerClassName)) {
             throw new NotFound("class $controllerClassName not found");
         }
         $controllerClass = new $controllerClassName($this);

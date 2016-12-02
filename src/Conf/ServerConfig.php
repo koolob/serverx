@@ -27,25 +27,56 @@ class ServerConfig
     private $host = '127.0.0.1';
     private $port = '8080';
 
+    private $runDir = null;
+    private $logDir = null;
+    private $appNamespace = null;
     private $appDir = null;
 
     /**
      * @return null
      */
-    public function getAppDir()
+    public function getRunDir()
     {
-        return $this->appDir;
+        return $this->runDir;
     }
 
     /**
      * @param null $appSrc
      */
-    public function setAppDir($appDir)
+    public function setRunDir($runDir)
     {
-        if (file_exists($appDir)) {
-            $this->appDir = $appDir;
+        if (file_exists($runDir)) {
+            $this->runDir = $runDir;
         } else {
-            throw new ConfigError("app dir $appDir not exist");
+            throw new ConfigError("app dir $runDir not exist");
+        }
+    }
+
+    /**
+     * @return null
+     */
+    public function getLogDir()
+    {
+        if (empty($this->logDir)) {
+            return $this->runDir;
+        } else {
+            return $this->logDir;
+        }
+    }
+
+    /**
+     * @param null $logDir
+     */
+    public function setLogDir($logDir)
+    {
+        if (file_exists($logDir)) {
+            $this->logDir = $logDir;
+        } else {
+            if (mkdir($logDir, 0777, true)) {
+                $this->logDir = $logDir;
+            } else {
+                throw new ConfigError("log dir $logDir not exist");
+            }
         }
     }
 
@@ -232,9 +263,23 @@ class ServerConfig
         return $this->getTaskWorkerNum() > 0;
     }
 
+    public function registerApp($namespace, $dir)
+    {
+        $this->appNamespace = $namespace;
+        $this->appDir = $dir;
+    }
+
     public function getControllerDir()
     {
-        return $this->appDir . DIRECTORY_SEPARATOR . 'controllers' . DIRECTORY_SEPARATOR;
+        return $this->appDir . DIRECTORY_SEPARATOR . 'Controller' . DIRECTORY_SEPARATOR;
+    }
+
+    /**
+     * @return null
+     */
+    public function getAppNamespace()
+    {
+        return $this->appNamespace;
     }
 
     public function toSwooleConfigArray()
