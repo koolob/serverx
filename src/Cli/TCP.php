@@ -9,10 +9,7 @@
 namespace Serverx\Cli;
 
 
-use Serverx\Protocol\RPCProtocol;
 use Serverx\Protocol\TCPProtocol;
-use Serverx\Rpc\Response;
-use Serverx\Util\Timeu;
 
 class TCP
 {
@@ -20,13 +17,17 @@ class TCP
 
     private $key = null;
 
-    protected static $_instances = array();
+    public static $_instances = array();
 
     function __construct($serverHost, $serverPort)
     {
         $key = $serverHost . ':' . $serverPort;
         $this->swoole_client = new \swoole_client(SWOOLE_SOCK_TCP | SWOOLE_KEEP);
-        $this->swoole_client->connect($serverHost, $serverPort);
+        try {
+            $this->swoole_client->connect($serverHost, $serverPort);
+        } catch (\Exception $e) {
+            var_dump($e);
+        }
         $this->swoole_client->set(array(
             'open_length_check' => true,
             'package_length_type' => 'N',
@@ -34,7 +35,6 @@ class TCP
             'package_length_offset' => 0,
             'package_body_offset' => 4,
         ));
-        self::$_instances[$key] = $this;
         $this->key = $key;
     }
 
@@ -58,6 +58,7 @@ class TCP
         $key = $serverHost . ':' . $serverPort;
         if (empty(self::$_instances[$key])) {
             $obj = new TCP($serverHost, $serverPort);
+            self::$_instances[$key] = $obj;
         } else {
             $obj = self::$_instances[$key];
         }
