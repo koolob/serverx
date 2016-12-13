@@ -32,6 +32,8 @@ class ServerConfig
     private $appNamespace = null;
     private $appDir = null;
 
+    private $debug = false;
+
     /**
      * @return null
      */
@@ -301,4 +303,22 @@ class ServerConfig
             $array[$key] = $val;
         }
     }
+
+    /**
+     * @return boolean
+     */
+    public function isDebug()
+    {
+        return $this->debug;
+    }
+
+    /**
+     * @param boolean $debug
+     */
+    public function enableDebug()
+    {
+        $this->debug = true;
+    }
+
+
 }

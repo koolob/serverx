@@ -10,6 +10,7 @@ namespace Serverx\Cli;
 
 
 use Serverx\Protocol\RPCProtocol;
+use Serverx\Rpc\Response;
 
 class RPC
 {
@@ -23,6 +24,14 @@ class RPC
     function getResponse(\Serverx\Rpc\Request $request)
     {
         $data = $this->tcp->getResult(RPCProtocol::encodeRequest($request));
-        return RPCProtocol::decodeResponse($data);
+        if ($data['code'] != 0) {
+            $response = Response::createErrorResponse($data['code'], $data['msg']);
+            $response->setMethod($request->getMethod());
+            $response->setParams($request->getParams());
+            $response->setSendTime($request->getTime());
+            return $response;
+        } else {
+            return RPCProtocol::decodeResponse($data['data']);
+        }
     }
 }

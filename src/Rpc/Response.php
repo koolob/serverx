@@ -14,8 +14,10 @@ use Serverx\Util\Timeu;
 class Response
 {
     const ERR_TIMEOUT = 1001;
+    const ERR_RECEIVE = 1002;
     const ERR_SERVER = 1009;
     const ERR_DATA = 1010;
+
     const SUCCESS = 1;
     const ERR_NOTFOUND = -1;
     const ERR_WRONGPARAMS = -2;
@@ -27,8 +29,8 @@ class Response
     private $params;
 
     private $serverTime;
-    private $code;
-    private $message;
+    private $code = 0;
+    private $message = null;
     private $result;
 
     private $retTime;
@@ -173,8 +175,15 @@ class Response
 
     function __toString()
     {
-        return $this->method . '|' . $this->getCostTime() . '|' . $this->getCode() . '|' . json_encode($this->getParams()) . '|' . json_encode($this->getResult());
+        return $this->method . '|' . $this->getCostTime() . '|' . $this->getCode() . '|' . $this->getMessage() . '|' . json_encode($this->getParams()) . '|' . json_encode($this->getResult());
     }
 
 
+    static function createErrorResponse($code, $message)
+    {
+        $response = new Response();
+        $response->setCode($code);
+        $response->setMessage($message);
+        return $response;
+    }
 }

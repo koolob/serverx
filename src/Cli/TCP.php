@@ -9,12 +9,16 @@
 namespace Serverx\Cli;
 
 
+use Serverx\Protocol\RPCProtocol;
 use Serverx\Protocol\TCPProtocol;
+use Serverx\Rpc\Response;
 use Serverx\Util\Timeu;
 
 class TCP
 {
     private $swoole_client = null;
+
+    private $key = null;
 
     protected static $_instances = array();
 
@@ -31,6 +35,22 @@ class TCP
             'package_body_offset' => 4,
         ));
         self::$_instances[$key] = $this;
+        $this->key = $key;
+    }
+
+    private function close()
+    {
+        $this->swoole_client->close();
+    }
+
+    private function getErrorCode()
+    {
+        return $this->swoole_client->errCode;
+    }
+
+    private function getErrorMessage()
+    {
+        return $this->key . ' ' . socket_strerror($this->getErrorCode());
     }
 
     public static function getInstance($serverHost, $serverPort)
@@ -44,11 +64,41 @@ class TCP
         return $obj;
     }
 
+    private static function release($key)
+    {
+        if (!empty(self::$_instances[$key])) {
+            $obj = self::$_instances[$key];
+            $obj->close();
+            unset(self::$_instances[$key]);
+        }
+    }
+
     function getResult($data)
     {
-        $this->swoole_client->send(TCPProtocol::encode($data));
-        $rev = $this->swoole_client->recv();
-        return TCPProtocol::decode($rev);
+        $result = array(
+            'code' => 0,
+            'msg' => '',
+            'data' => null,
+        );
+        $success = $this->swoole_client->send(TCPProtocol::encode($data));
+        if ($success) {
+            $rev = $this->swoole_client->recv();
+            if ($rev === false) {
+                $result['code'] = $this->getErrorCode();
+                $result['msg'] = $this->getErrorMessage();
+            } elseif (empty($rev)) {
+                self::release($this->key);
+                $result['code'] = $this->getErrorCode();
+                $result['msg'] = $this->getErrorMessage();
+            } else {
+                $result['data'] = TCPProtocol::decode($rev);
+            }
+        } else {
+            self::release($this->key);
+            $result['code'] = $this->getErrorCode();
+            $result['msg'] = $this->getErrorMessage();
+        }
+        return $result;
     }
 
     public function ping()
