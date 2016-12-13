@@ -6,7 +6,7 @@
  * Time: 下午5:04
  */
 date_default_timezone_set("UTC");
-
+error_reporting(0);
 require_once __DIR__ . "/../vendor/autoload.php";
 $begin = Serverx\Util\Timeu::mTimestamp();
 $rpc = new \Serverx\Cli\RPC('127.0.0.1', '8080');
