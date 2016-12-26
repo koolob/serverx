@@ -18,9 +18,13 @@ class RPCServer extends TCPServer
 {
     protected function handlerReceive($data)
     {
+        return RPCServer::handleRPC($this, $data);
+    }
+
+    public static function handleRPC(BaseServ $baseServ, $data)
+    {
         $resuest = RPCProtocol::decodeRequest($data);
 
-//        $method = $resuest->getMethod();
         $response = new Response();
         $params = $resuest->getParams();
         $response->setId($resuest->getId());
@@ -29,7 +33,7 @@ class RPCServer extends TCPServer
         $response->setMethod($resuest->getMethod());
 
         try {
-            $result = $this->handle($resuest->getController(), $resuest->getAction(), $params);
+            $result = $baseServ->handle($resuest->getController(), $resuest->getAction(), $params);
             $response->setCode(\Serverx\Rpc\Response::SUCCESS);
             $response->setResult($result);
         } catch (\Exception $e) {

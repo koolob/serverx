@@ -79,7 +79,7 @@ abstract class BaseServ
 
     }
 
-    protected function handle($controller, $action, array $params)
+    protected function handle($controller, $action, array $params, $extras = array())
     {
         $controllerClassName = '\\' . $this->getServerConfig()->getAppNamespace() . '\\Controller\\' . ucwords($controller);
         if (!class_exists($controllerClassName)) {
@@ -93,6 +93,7 @@ abstract class BaseServ
         if (!method_exists($controllerClass, $actionMethod)) {
             throw new NotFound("method $actionMethod not found");
         }
+        $controllerClass->setExtras($extras);
         return $controllerClass->$actionMethod($params);
     }
 
@@ -129,5 +130,10 @@ abstract class BaseServ
     protected function getServerConfig()
     {
         return $this->serverConfig;
+    }
+
+    public function status()
+    {
+        return $this->swoole_server->stats();
     }
 }

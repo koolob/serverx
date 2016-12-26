@@ -43,6 +43,63 @@ class HttpServer extends BaseServ
 
     public function onRequest(\swoole_http_request $request, \swoole_http_response $response)
     {
-        
+        HttpServer::handlerHttp($this, $request, $response);
+    }
+
+    public static function handlerHttp(BaseServ $baseServ, \swoole_http_request $request, \swoole_http_response $response)
+    {
+        $path = $request->server['path_info'];
+        $pathInfos = explode("/", $path);
+        if (sizeof($pathInfos) != 3) {
+            //not /xxx/xxx
+            $response->status(404);
+            $response->end('');
+        } else {
+            $controller = $pathInfos[1];
+            $action = $pathInfos[2];
+
+            $get = array();
+            $post = array();
+
+            if (!empty($request->post)) {
+                $post = $request->post;
+            }
+            if (!empty($request->get)) {
+                $get = $request->get;
+            }
+
+            $params = array_merge($get, $post);
+
+            $extras = array(
+                'GET' => $get,
+                'POST' => $post,
+                'HEADER' => $request->header,
+                'SERVER' => $request->server,
+            );
+
+            if (isset($request->header['accept-encoding'])) {
+                $accept_encoding = $request->header['accept-encoding'];
+                if (strpos($accept_encoding, 'gzip') !== false) {
+                    $response->gzip(3);
+                }
+            }
+
+            try {
+                $result = $baseServ->handle($controller, $action, $params, $extras);
+                if (is_array($result)) {
+                    $result = json_encode($result);
+                }
+                if (isset($params['callback'])) {
+                    $callback = $params['callback'];
+                    $result = $callback . '(' . $result . ')';
+                }
+                $response->header('Content-type', 'application/json');
+                $response->status(200);
+                $response->end($result);
+            } catch (\Exception $e) {
+                $response->status(500);
+                $response->end('');
+            }
+        }
     }
 }

@@ -63,7 +63,8 @@ class MixServer extends BaseServ
 
     public function onRequest(\swoole_http_request $request, \swoole_http_response $response)
     {
-
+        $response->status(404);
+        $response->end("");
     }
 
     public function onOpen(\swoole_websocket_server $serv, $fd)
@@ -73,7 +74,7 @@ class MixServer extends BaseServ
 
     public function onMessage(\swoole_websocket_server $serv, \swoole_websocket_frame $frame)
     {
-
+        $serv->push($frame->fd, $frame->data);
     }
 
     public function onClose(\swoole_server $serv, $fd)
@@ -108,6 +109,6 @@ class MixServer extends BaseServ
 
     public function onPacket(\swoole_server $serv, $data, $addr)
     {
-
+        var_dump($addr);
     }
 }
