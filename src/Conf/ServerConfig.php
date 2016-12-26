@@ -26,6 +26,7 @@ class ServerConfig
 
     private $host = '127.0.0.1';
     private $port = '8080';
+    private $sock_type = 1;
 
     private $runDir = null;
     private $logDir = null;
@@ -112,6 +113,22 @@ class ServerConfig
     public function setPort($port)
     {
         $this->port = $port;
+    }
+
+    /**
+     * @return int
+     */
+    public function getSockType()
+    {
+        return $this->sock_type;
+    }
+
+    /**
+     * @param int $sock_type
+     */
+    public function setSockType($sock_type)
+    {
+        $this->sock_type = $sock_type;
     }
 
     /**
