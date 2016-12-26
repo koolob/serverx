@@ -17,7 +17,7 @@ use Serverx\Util\Timeu;
 
 class RPCServer extends TCPServer
 {
-    const HANDLE_TYPE_RPC = 1;
+    const HANDLE_TYPE_RPC = 2;
 
     protected function handlerReceive($data)
     {
@@ -41,8 +41,10 @@ class RPCServer extends TCPServer
             $response->setResult($result);
         } catch (NotFound $e) {
             $response->setCode(\Serverx\Rpc\Response::ERR_NOTFOUND);
+            $response->setMessage($e->getMessage());
         } catch (\Exception $e) {
-
+            $response->setCode(\Serverx\Rpc\Response::ERR_SERVER);
+            $response->setMessage($e->getMessage());
         }
         $response->setServerTime(Timeu::mTimestamp());
         return RPCProtocol::encodeResponse($response);
