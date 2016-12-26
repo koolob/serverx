@@ -9,6 +9,7 @@
 namespace Serverx\Serv;
 
 
+use Serverx\Exception\App\NotFound;
 use Serverx\Protocol\RPCProtocol;
 use Serverx\Rpc\Request;
 use Serverx\Rpc\Response;
@@ -38,6 +39,8 @@ class RPCServer extends TCPServer
             $result = $baseServ->handle($resuest->getController(), $resuest->getAction(), $params, array(), self::HANDLE_TYPE_RPC);
             $response->setCode(\Serverx\Rpc\Response::SUCCESS);
             $response->setResult($result);
+        } catch (NotFound $e) {
+            $response->setCode(\Serverx\Rpc\Response::ERR_NOTFOUND);
         } catch (\Exception $e) {
 
         }

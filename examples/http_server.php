@@ -15,4 +15,8 @@ $config->setRunDir(__DIR__);
 $config->setLogDir(__DIR__ . '/logs');
 $config->registerApp('App', __DIR__);
 $server = new \Serverx\Serv\HttpServer($config);
+$server->addHandleTypes(\Serverx\Serv\HttpServer::HANDLE_TYPE_HTTP, array(
+    'system.health',
+    'system.status',
+));
 $server->run();
