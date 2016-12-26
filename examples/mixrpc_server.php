@@ -15,7 +15,7 @@ $config->setRunDir(__DIR__);
 $config->setLogDir(__DIR__ . '/logs');
 $config->registerApp('App', __DIR__);
 
-$server = new \Serverx\Serv\MixServer($config);
+$server = new \Serverx\Serv\MixRPCServer($config);
 
 $rpcconfig = new \Serverx\Conf\TCPServerConfig();
 $rpcconfig->setHost('0.0.0.0');
