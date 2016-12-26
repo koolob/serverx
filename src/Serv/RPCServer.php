@@ -16,6 +16,8 @@ use Serverx\Util\Timeu;
 
 class RPCServer extends TCPServer
 {
+    const HANDLE_TYPE_RPC = 1;
+
     protected function handlerReceive($data)
     {
         return RPCServer::handleRPC($this, $data);
@@ -33,7 +35,7 @@ class RPCServer extends TCPServer
         $response->setMethod($resuest->getMethod());
 
         try {
-            $result = $baseServ->handle($resuest->getController(), $resuest->getAction(), $params);
+            $result = $baseServ->handle($resuest->getController(), $resuest->getAction(), $params, array(), self::HANDLE_TYPE_RPC);
             $response->setCode(\Serverx\Rpc\Response::SUCCESS);
             $response->setResult($result);
         } catch (\Exception $e) {

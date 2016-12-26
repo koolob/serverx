@@ -10,9 +10,11 @@ namespace Serverx\Serv;
 
 
 use Serverx\Conf\ServerConfig;
+use Serverx\Exception\App\NotFound;
 
 class HttpServer extends BaseServ
 {
+    const HANDLE_TYPE_HTTP = 1;
 
     protected function initSwooleServer(ServerConfig $config)
     {
@@ -85,7 +87,7 @@ class HttpServer extends BaseServ
             }
 
             try {
-                $result = $baseServ->handle($controller, $action, $params, $extras);
+                $result = $baseServ->handle($controller, $action, $params, $extras, self::HANDLE_TYPE_HTTP);
                 if (is_array($result)) {
                     $result = json_encode($result);
                 }
@@ -96,6 +98,9 @@ class HttpServer extends BaseServ
                 $response->header('Content-type', 'application/json');
                 $response->status(200);
                 $response->end($result);
+            } catch (NotFound $e) {
+                $response->status(404);
+                $response->end('');
             } catch (\Exception $e) {
                 $response->status(500);
                 $response->end('');

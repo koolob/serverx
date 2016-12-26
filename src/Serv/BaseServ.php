@@ -20,6 +20,8 @@ abstract class BaseServ
     private $serverConfig;
     private $logger;
 
+    private $handleTypes = array();
+
     function __construct(ServerConfig $config)
     {
         $this->serverConfig = $config;
@@ -79,8 +81,14 @@ abstract class BaseServ
 
     }
 
-    protected function handle($controller, $action, array $params, $extras = array())
+    protected function handle($controller, $action, array $params, $extras = array(), $type = 0)
     {
+        if (isset($this->handleTypes[$type])) {
+            if (!in_array("$controller.$action", $this->handleTypes[$type])) {
+                throw new NotFound("$controller.$action not allow");
+            }
+        }
+
         $controllerClassName = '\\' . $this->getServerConfig()->getAppNamespace() . '\\Controller\\' . ucwords($controller);
         if (!class_exists($controllerClassName)) {
             require_once $this->getServerConfig()->getControllerDir() . ucwords($controller) . '.php';
@@ -135,5 +143,10 @@ abstract class BaseServ
     public function status()
     {
         return $this->swoole_server->stats();
+    }
+
+    public function addHandleTypes($type, array $names)
+    {
+        $this->handleTypes[$type] = $names;
     }
 }
