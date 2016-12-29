@@ -15,7 +15,7 @@ class System extends BaseController
 {
     public function health($params)
     {
-        return array();
+        return "";
     }
 
     public function status($params)

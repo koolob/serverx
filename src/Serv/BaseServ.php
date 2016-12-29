@@ -98,7 +98,12 @@ abstract class BaseServ
 
         $controllerClassName = '\\' . $this->getServerConfig()->getAppNamespace() . '\\Controller\\' . ucwords($controller);
         if (!class_exists($controllerClassName)) {
-            require_once $this->getServerConfig()->getControllerDir() . ucwords($controller) . '.php';
+            $file = $this->getServerConfig()->getControllerDir() . ucwords($controller) . '.php';
+            if (file_exists($file)) {
+                require_once $file;
+            } else {
+                throw new NotFound("class $controllerClassName not found");
+            }
         }
         if (!class_exists($controllerClassName)) {
             throw new NotFound("class $controllerClassName not found");
