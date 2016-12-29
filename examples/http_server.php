@@ -13,10 +13,13 @@ $config = new \Serverx\Conf\ServerConfig();
 $config->setDaemonize(0);
 $config->setRunDir(__DIR__);
 $config->setLogDir(__DIR__ . '/logs');
+$config->setLogLevel();
+$config->setMaxRequest(10);
+$config->setDispatchMode(3);
 $config->registerApp('App', __DIR__);
 $server = new \Serverx\Serv\HttpServer($config);
-$server->addHandleTypes(\Serverx\Serv\HttpServer::HANDLE_TYPE_HTTP, array(
-    'system.health',
-    'system.status',
-));
+//$server->addHandleTypes(\Serverx\Serv\HttpServer::HANDLE_TYPE_HTTP, array(
+//    'system.health',
+//    'system.status',
+//));
 $server->run();

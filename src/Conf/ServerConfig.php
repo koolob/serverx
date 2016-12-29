@@ -9,8 +9,8 @@
 namespace Serverx\Conf;
 
 
+use Psr\Log\LogLevel;
 use Serverx\Exception\Server\ConfigError;
-use Serverx\Exception\ServerAppDirException;
 
 class ServerConfig
 {
@@ -30,6 +30,7 @@ class ServerConfig
 
     private $runDir = null;
     private $logDir = null;
+    private $logLvl = LogLevel::ERROR;
     private $appNamespace = null;
     private $appDir = null;
 
@@ -81,6 +82,16 @@ class ServerConfig
                 throw new ConfigError("log dir $logDir not exist");
             }
         }
+    }
+
+    public function getLogLevel()
+    {
+        return $this->logLvl;
+    }
+
+    public function setLogLevel($level = LogLevel::DEBUG)
+    {
+        $this->logLvl = $level;
     }
 
     /**

@@ -10,7 +10,7 @@ error_reporting(0);
 require_once __DIR__ . "/../vendor/autoload.php";
 $begin = Serverx\Util\Timeu::mTimestamp();
 for ($i = 0; $i < 10000; $i++) {
-    $rpc = new \Serverx\Cli\RPC('11.11.1.11', '9797');
+    $rpc = new \Serverx\Cli\RPC('127.0.0.1', '9797');
     $request = \Serverx\Rpc\Request::build('index.index')->setParams(array(
         'a' => 1,
         'b' => 'b'

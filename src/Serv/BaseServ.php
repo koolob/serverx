@@ -19,13 +19,13 @@ abstract class BaseServ
     private $swoole_server;
     private $serverConfig;
     private $logger;
+    private $name;
 
     private $handleTypes = array();
 
     function __construct(ServerConfig $config)
     {
         $this->serverConfig = $config;
-        $this->logger = new Logger($config->getLogDir());
         set_error_handler(array($this, 'errorHandle'));
     }
 
@@ -58,12 +58,19 @@ abstract class BaseServ
 
     public function onWorkerStart(\swoole_server $serv, $worker_id)
     {
-        if ($serv->taskworker) {
-            $this->setProcessName('serverx-tasker');
+        $base = 'serverx-';
+        if ($this->swoole_server->taskworker) {
+            $base .= 'tasker-';
         } else {
-            $this->setProcessName('serverx-worker');
+            $base .= 'worker-';
         }
-        echo "serverx $worker_id start at " . date("Ymd:His") . PHP_EOL;
+        $base .= $worker_id;
+        $this->name = $base;
+        $this->setProcessName($base);
+        echo "$base start at " . date("Ymd:His") . PHP_EOL;
+        $this->logger = new Logger($this->serverConfig->getLogDir(), $this->serverConfig->getLogLevel(), array(
+            'extension' => date('H') . '.log',
+        ));
     }
 
     public function onTask(\swoole_server $serv, $task_id, $from_id, $data)
@@ -107,7 +114,7 @@ abstract class BaseServ
 
     public function info($message)
     {
-        $this->logger->info($message);
+        $this->logger->info('[' . $this->name . '] ' . $message);
     }
 
     private function setProcessName($name)
