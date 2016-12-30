@@ -122,6 +122,16 @@ abstract class BaseServ
         $this->logger->info('[' . $this->name . '] ' . $message);
     }
 
+    public function warn($message)
+    {
+        $this->logger->warn('[' . $this->name . '] ' . $message);
+    }
+
+    public function error($message)
+    {
+        $this->logger->error('[' . $this->name . '] ' . $message);
+    }
+
     private function setProcessName($name)
     {
         if (PHP_OS == "Darwin") {

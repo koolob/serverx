@@ -99,9 +99,11 @@ class HttpServer extends BaseServ
                 $response->status(200);
                 $response->end($result);
             } catch (NotFound $e) {
+                $baseServ->warn("404:" . $e->getMessage());
                 $response->status(404);
                 $response->end('');
             } catch (\Exception $e) {
+                $baseServ->error("500" . $e->getMessage());
                 $response->status(500);
                 $response->end('');
             }

@@ -40,9 +40,11 @@ class RPCServer extends TCPServer
             $response->setCode(\Serverx\Rpc\Response::SUCCESS);
             $response->setResult($result);
         } catch (NotFound $e) {
+            $baseServ->warn("404:" . $e->getMessage());
             $response->setCode(\Serverx\Rpc\Response::ERR_NOTFOUND);
             $response->setMessage($e->getMessage());
         } catch (\Exception $e) {
+            $baseServ->error("500" . $e->getMessage());
             $response->setCode(\Serverx\Rpc\Response::ERR_SERVER);
             $response->setMessage($e->getMessage());
         }
