@@ -122,9 +122,9 @@ abstract class BaseServ
         $this->logger->info('[' . $this->name . '] ' . $message);
     }
 
-    public function warn($message)
+    public function warning($message)
     {
-        $this->logger->warn('[' . $this->name . '] ' . $message);
+        $this->logger->warning('[' . $this->name . '] ' . $message);
     }
 
     public function error($message)
