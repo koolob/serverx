@@ -173,6 +173,11 @@ class Response
         return $this->retTime - $this->sendTime;
     }
 
+    public function isSuccess()
+    {
+        return $this->getCode() === self::SUCCESS;
+    }
+
     function __toString()
     {
         return $this->method . '|' . $this->getCostTime() . '|' . $this->getCode() . '|' . $this->getMessage() . '|' . json_encode($this->getParams()) . '|' . json_encode($this->getResult());

@@ -23,11 +23,7 @@ class TCP
     {
         $key = $serverHost . ':' . $serverPort;
         $this->swoole_client = new \swoole_client(SWOOLE_SOCK_TCP | SWOOLE_KEEP);
-        try {
-            $this->swoole_client->connect($serverHost, $serverPort);
-        } catch (\Exception $e) {
-            var_dump($e);
-        }
+        $this->swoole_client->connect($serverHost, $serverPort);
         $this->swoole_client->set(array(
             'open_length_check' => true,
             'package_length_type' => 'N',

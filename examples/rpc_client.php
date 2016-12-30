@@ -9,13 +9,13 @@ date_default_timezone_set("UTC");
 error_reporting(0);
 require_once __DIR__ . "/../vendor/autoload.php";
 $begin = Serverx\Util\Timeu::mTimestamp();
-for ($i = 0; $i < 10000; $i++) {
+for ($i = 0; $i < 1; $i++) {
     $rpc = new \Serverx\Cli\RPC('127.0.0.1', '9797');
     $request = \Serverx\Rpc\Request::build('index.index')->setParams(array(
         'a' => 1,
         'b' => 'b'
     ));
-    $response = $rpc->getResponse($request);
+    $response = $rpc->getResponse($request, 3);
     echo "get response:" . $response . "\n";
 }
 
