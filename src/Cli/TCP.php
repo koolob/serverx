@@ -19,11 +19,11 @@ class TCP
 
     public static $_instances = array();
 
-    function __construct($serverHost, $serverPort)
+    function __construct($serverHost, $serverPort, $timeout = 0.1)
     {
         $key = $serverHost . ':' . $serverPort;
         $this->swoole_client = new \swoole_client(SWOOLE_SOCK_TCP | SWOOLE_KEEP);
-        $this->swoole_client->connect($serverHost, $serverPort);
+        $this->swoole_client->connect($serverHost, $serverPort, $timeout);
         $this->swoole_client->set(array(
             'open_length_check' => true,
             'package_length_type' => 'N',
@@ -49,11 +49,11 @@ class TCP
         return $this->key . ' ' . socket_strerror($this->getErrorCode());
     }
 
-    public static function getInstance($serverHost, $serverPort)
+    public static function getInstance($serverHost, $serverPort, $timeout = 0.1)
     {
         $key = $serverHost . ':' . $serverPort;
         if (empty(self::$_instances[$key])) {
-            $obj = new TCP($serverHost, $serverPort);
+            $obj = new TCP($serverHost, $serverPort, $timeout);
             self::$_instances[$key] = $obj;
         } else {
             $obj = self::$_instances[$key];

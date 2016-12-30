@@ -17,19 +17,21 @@ class RPC
     private $tcp;
     private $host;
     private $port;
+    private $timeout;
 
-    function __construct($host, $port)
+    function __construct($host, $port, $timeout = 0.1)
     {
-        $this->tcp = TCP::getInstance($host, $port);
+        $this->tcp = TCP::getInstance($host, $port, $timeout);
         $this->host = $host;
         $this->port = $port;
+        $this->timeout = $timeout;
     }
 
     function getResponse(\Serverx\Rpc\Request $request, $retry = 0)
     {
         $data = $this->tcp->getResult(RPCProtocol::encodeRequest($request));
         while ($data['code'] != 0 && $retry > 0) {
-            $this->tcp = TCP::getInstance($this->host, $this->port);
+            $this->tcp = TCP::getInstance($this->host, $this->port, $this->timeout);
             $data = $this->tcp->getResult(RPCProtocol::encodeRequest($request));
             $retry--;
         }
