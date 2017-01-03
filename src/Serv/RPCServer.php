@@ -26,27 +26,31 @@ class RPCServer extends TCPServer
 
     public static function handleRPC(BaseServ $baseServ, $data)
     {
-        $resuest = RPCProtocol::decodeRequest($data);
+        $request = RPCProtocol::decodeRequest($data, $baseServ->getServerConfig()->getSecret());
 
         $response = new Response();
-        $params = $resuest->getParams();
-        $response->setId($resuest->getId());
-        $response->setSendTime($resuest->getTime());
-        $response->setParams($resuest->getParams());
-        $response->setMethod($resuest->getMethod());
+        $params = $request->getParams();
+        $response->setId($request->getId());
+        $response->setSendTime($request->getTime());
+        $response->setParams($request->getParams());
+        $response->setMethod($request->getMethod());
 
-        try {
-            $result = $baseServ->handle($resuest->getController(), $resuest->getAction(), $params, array(), self::HANDLE_TYPE_RPC);
-            $response->setCode(\Serverx\Rpc\Response::SUCCESS);
-            $response->setResult($result);
-        } catch (NotFound $e) {
-            $baseServ->warning("404:" . $e->getMessage());
-            $response->setCode(\Serverx\Rpc\Response::ERR_NOTFOUND);
-            $response->setMessage($e->getMessage());
-        } catch (\Exception $e) {
-            $baseServ->error("500" . $e->getMessage());
-            $response->setCode(\Serverx\Rpc\Response::ERR_SERVER);
-            $response->setMessage($e->getMessage());
+        if (!$request->isLegal()) {
+            $response->setCode(\Serverx\Rpc\Response::ERR_SIGN);
+        } else {
+            try {
+                $result = $baseServ->handle($request->getController(), $request->getAction(), $params, array(), self::HANDLE_TYPE_RPC);
+                $response->setCode(\Serverx\Rpc\Response::SUCCESS);
+                $response->setResult($result);
+            } catch (NotFound $e) {
+                $baseServ->warning("404:" . $e->getMessage());
+                $response->setCode(\Serverx\Rpc\Response::ERR_NOTFOUND);
+                $response->setMessage($e->getMessage());
+            } catch (\Exception $e) {
+                $baseServ->error("500" . $e->getMessage());
+                $response->setCode(\Serverx\Rpc\Response::ERR_SERVER);
+                $response->setMessage($e->getMessage());
+            }
         }
         $response->setServerTime(Timeu::mTimestamp());
         return RPCProtocol::encodeResponse($response);

@@ -14,26 +14,42 @@ use Serverx\Rpc\Response;
 
 class RPCProtocol
 {
-    public static function encodeRequest(\Serverx\Rpc\Request $request)
+    public static function encodeRequest(\Serverx\Rpc\Request $request, $secret = '')
     {
-        return json_encode(array(
+        $data = array(
             'id' => $request->getId(),
             'time' => $request->getTime(),
             'method' => $request->getMethod(),
             'params' => $request->getParams(),
-        ));
+        );
+        if (!empty($secret)) {
+            $data['sign'] = md5($data['id'] . $data['method'] . $data['time'] . $secret);
+        }
+        return json_encode($data);
     }
 
-    public static function decodeRequest($data)
+    public static function decodeRequest($data, $secret = '')
     {
         $json = json_decode($data, true);
         $id = $json['id'];
         $time = $json['time'];
         $method = $json['method'];
         $params = $json['params'];
+
         $request = Request::build($method, $id);
         $request->setTime($time);
         $request->setParams($params);
+
+        if (!empty($secret)) {
+            if (isset($json['sign'])) {
+                if (md5($id . $method . $time . $secret) != $json['sign']) {
+                    $request->setLegal(false);
+                }
+            } else {
+                $request->setLegal(false);
+            }
+        }
+
         return $request;
     }
 

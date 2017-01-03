@@ -36,6 +36,8 @@ class ServerConfig
 
     private $debug = false;
 
+    private $secret = '';
+
     /**
      * @return null
      */
@@ -124,6 +126,22 @@ class ServerConfig
     public function setPort($port)
     {
         $this->port = $port;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSecret()
+    {
+        return $this->secret;
+    }
+
+    /**
+     * @param string $secret
+     */
+    public function setSecret($secret)
+    {
+        $this->secret = $secret;
     }
 
     /**

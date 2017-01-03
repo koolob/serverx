@@ -20,6 +20,8 @@ class Request
     private $controller;
     private $action;
 
+    private $legal = true;
+
     /**
      * Request constructor.
      * @param $id
@@ -98,6 +100,22 @@ class Request
     {
         $this->params = $params;
         return $this;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isLegal()
+    {
+        return $this->legal;
+    }
+
+    /**
+     * @param boolean $legal
+     */
+    public function setLegal($legal)
+    {
+        $this->legal = $legal;
     }
 
     public static function build($method, $id = null)
