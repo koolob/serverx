@@ -36,6 +36,10 @@ class RPCProtocol
         $method = $json['method'];
         $params = $json['params'];
 
+        if ($params == null) {
+            $params = array();
+        }
+
         $request = Request::build($method, $id);
         $request->setTime($time);
         $request->setParams($params);
