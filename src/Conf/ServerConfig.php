@@ -322,6 +322,12 @@ class ServerConfig
         $this->addConfig($config, 'max_request', $this->getMaxRequest());
         $this->addConfig($config, 'dispatch_mode', $this->getDispatchMode());
 
+        if ($this->isTaskEnable()) {
+            $this->addConfig($config, 'task_worker_num', $this->getTaskWorkerNum());
+            $this->addConfig($config, 'task_ipc_mode', $this->getTaskIpcMode());
+            $this->addConfig($config, 'task_max_request', $this->getTaskMaxRequest());
+        }
+
         return $config;
     }
 
