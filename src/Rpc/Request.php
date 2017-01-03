@@ -90,15 +90,21 @@ class Request
      */
     public function getParams()
     {
-        return $this->params;
+        if (!empty($this->params)) {
+            return $this->params;
+        } else {
+            return array();
+        }
     }
 
     /**
      * @param mixed $params
      */
-    public function setParams($params)
+    public function setParams(array $params)
     {
-        $this->params = $params;
+        if (!empty($params)) {
+            $this->params = $params;
+        }
         return $this;
     }
 
