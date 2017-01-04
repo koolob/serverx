@@ -56,4 +56,9 @@ class BaseController
     {
         return true;
     }
+
+    public function beforeMethod($controller, $action, $params)
+    {
+
+    }
 }

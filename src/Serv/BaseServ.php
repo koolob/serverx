@@ -126,6 +126,7 @@ abstract class BaseServ
         }
 
         $controllerClass->setExtras($extras);
+        $controllerClass->beforeMethod($controller, $action, $params);
         return $controllerClass->$actionMethod($params);
     }
 
