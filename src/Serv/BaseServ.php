@@ -23,6 +23,8 @@ abstract class BaseServ
 
     private $handleTypes = array();
 
+    private $worker_start_callback = null;
+
     function __construct(ServerConfig $config)
     {
         $this->serverConfig = $config;
@@ -71,6 +73,9 @@ abstract class BaseServ
         $this->logger = new Logger($this->serverConfig->getLogDir(), $this->serverConfig->getLogLevel(), array(
             'extension' => date('H') . '.log',
         ));
+        if ($this->worker_start_callback != null && is_callable($this->worker_start_callback)) {
+            call_user_func($this->worker_start_callback, $serv);
+        }
     }
 
     public function onTask(\swoole_server $serv, $task_id, $from_id, $data)
@@ -170,5 +175,10 @@ abstract class BaseServ
     public function addHandleTypes($type, array $names)
     {
         $this->handleTypes[$type] = $names;
+    }
+
+    public function setWorkerStartCallback($func)
+    {
+        $this->worker_start_callback = $func;
     }
 }
