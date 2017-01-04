@@ -126,8 +126,12 @@ abstract class BaseServ
         }
 
         $controllerClass->setExtras($extras);
-        $controllerClass->beforeMethod($controller, $action, $params);
-        return $controllerClass->$actionMethod($params);
+        $data = $controllerClass->beforeMethod($controller, $action, $params);
+        if (empty($data)) {
+            return $controllerClass->$actionMethod($params);
+        } else {
+            return $data;
+        }
     }
 
     public function info($message)
