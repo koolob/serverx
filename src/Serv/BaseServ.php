@@ -11,6 +11,7 @@ namespace Serverx\Serv;
 
 use Katzgrau\KLogger\Logger;
 use Serverx\Conf\ServerConfig;
+use Serverx\Exception\App\EmptyParams;
 use Serverx\Exception\App\NotFound;
 use Serverx\Exception\Server\ConfigError;
 
@@ -114,10 +115,16 @@ abstract class BaseServ
             throw new NotFound("class $controllerClassName not found");
         }
         $controllerClass = new $controllerClassName($this);
+
         $actionMethod = $controllerClass->getActionMethod($action);
         if (!method_exists($controllerClass, $actionMethod)) {
             throw new NotFound("method $actionMethod not found");
         }
+
+        if (!$controllerClass->checkParams($action, $params)) {
+            throw new EmptyParams();
+        }
+
         $controllerClass->setExtras($extras);
         return $controllerClass->$actionMethod($params);
     }

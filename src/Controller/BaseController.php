@@ -51,4 +51,9 @@ class BaseController
             return null;
         }
     }
+
+    public function checkParams($action, $paramsNeedKey)
+    {
+        return true;
+    }
 }
