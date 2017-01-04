@@ -9,6 +9,7 @@
 namespace Serverx\Serv;
 
 
+use Serverx\Exception\App\EmptyParams;
 use Serverx\Exception\App\NotFound;
 use Serverx\Protocol\RPCProtocol;
 use Serverx\Rpc\Request;
@@ -45,6 +46,10 @@ class RPCServer extends TCPServer
             } catch (NotFound $e) {
                 $baseServ->warning("404:" . $e->getMessage());
                 $response->setCode(\Serverx\Rpc\Response::ERR_NOTFOUND);
+                $response->setMessage($e->getMessage());
+            } catch (EmptyParams $e) {
+                $baseServ->warning("403:" . $e->getMessage());
+                $response->setCode(\Serverx\Rpc\Response::ERR_WRONGPARAMS);
                 $response->setMessage($e->getMessage());
             } catch (\Exception $e) {
                 $baseServ->error("500" . $e->getMessage());
