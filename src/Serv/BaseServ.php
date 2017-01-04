@@ -121,7 +121,7 @@ abstract class BaseServ
             throw new NotFound("method $actionMethod not found");
         }
 
-        if (!$controllerClass->checkParams($action, $params)) {
+        if (!$controllerClass->checkParams($controller, $action, $params)) {
             throw new EmptyParams();
         }
 

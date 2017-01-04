@@ -10,6 +10,7 @@ namespace Serverx\Serv;
 
 
 use Serverx\Conf\ServerConfig;
+use Serverx\Exception\App\EmptyParams;
 use Serverx\Exception\App\NotFound;
 
 class HttpServer extends BaseServ
@@ -102,6 +103,10 @@ class HttpServer extends BaseServ
                 $baseServ->warning("404:" . $e->getMessage());
                 $response->status(404);
                 $response->end('');
+            } catch (EmptyParams $e) {
+                $baseServ->warning("403:" . $e->getMessage());
+                $response->status(403);
+                $response->end('params not allow');
             } catch (\Exception $e) {
                 $baseServ->error("500" . $e->getMessage());
                 $response->status(500);

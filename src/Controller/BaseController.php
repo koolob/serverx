@@ -52,7 +52,7 @@ class BaseController
         }
     }
 
-    public function checkParams($action, $paramsNeedKey)
+    public function checkParams($controller, $action, $paramsNeedKey)
     {
         return true;
     }
