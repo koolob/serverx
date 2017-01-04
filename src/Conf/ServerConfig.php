@@ -349,7 +349,7 @@ class ServerConfig
         return $config;
     }
 
-    private function addConfig($array, $key, $val)
+    private function addConfig(&$array, $key, $val)
     {
         if (!empty($val) && $val > 0) {
             $array[$key] = $val;
