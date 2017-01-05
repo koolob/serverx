@@ -100,7 +100,9 @@ abstract class BaseServ
     {
         if (isset($this->handleTypes[$type])) {
             if (!in_array("$controller.$action", $this->handleTypes[$type])) {
-                throw new NotFound("$controller.$action not allow");
+                if (!in_array("$controller.*", $this->handleTypes[$type])) {
+                    throw new NotFound("$controller.$action not allow");
+                }
             }
         }
 
