@@ -26,6 +26,8 @@ abstract class BaseServ
 
     private $worker_start_callback = null;
 
+    private $enableRequestLog = false;
+
     function __construct(ServerConfig $config)
     {
         $this->serverConfig = $config;
@@ -128,10 +130,13 @@ abstract class BaseServ
         $controllerClass->setExtras($extras);
         $data = $controllerClass->beforeMethod($controller, $action, $params);
         if (empty($data)) {
-            return $controllerClass->$actionMethod($params);
-        } else {
-            return $data;
+            $data = $controllerClass->$actionMethod($params);
         }
+        if ($this->enableRequestLog) {
+            $ret = is_array($data) ? json_encode($data) : $data;
+            $this->info("[REQUEST][$controller][$action][--" . json_encode($params) . "--][RESPONSE][--" . $ret . "--]");
+        }
+        return $data;
     }
 
     public function info($message)
@@ -192,5 +197,10 @@ abstract class BaseServ
     public function setWorkerStartCallback($func)
     {
         $this->worker_start_callback = $func;
+    }
+
+    public function enableRequestLog()
+    {
+        $this->enableRequestLog = true;
     }
 }
