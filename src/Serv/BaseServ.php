@@ -83,12 +83,43 @@ abstract class BaseServ
 
     public function onTask(\swoole_server $serv, $task_id, $from_id, $data)
     {
-
+        if (empty($data) || !isset($data['class'])) {
+            return null;
+        } else {
+            $taskName = $data['class'];
+            $params = $data['params'];
+            if (!class_exists($taskName, true)) {
+                return null;
+            }
+            $taskClass = new $taskName($this);
+            try {
+                $result = $taskClass->exec($params);
+                $data['result'] = $result;
+                return $data;
+            } catch (\Exception $e) {
+                return null;
+            }
+        }
     }
 
     public function onFinish(\swoole_server $serv, $task_id, $data)
     {
-
+        if (empty($data) || !isset($data['class'])) {
+            return;
+        } else {
+            $taskName = $data['class'];
+            $params = $data['params'];
+            $result = $data['result'];
+            if (!class_exists($taskName, true)) {
+                return;
+            }
+            $taskClass = new $taskName($this);
+            try {
+                $taskClass->after($params, $result);
+            } catch (\Exception $e) {
+                return;
+            }
+        }
     }
 
     public function errorHandle($error, $error_string, $filename, $line, $symbols)
@@ -189,6 +220,11 @@ abstract class BaseServ
     public function status()
     {
         return $this->swoole_server->stats();
+    }
+
+    public function run_task($data)
+    {
+        $this->swoole_server->task($data);
     }
 
     public function addHandleTypes($type, array $names)

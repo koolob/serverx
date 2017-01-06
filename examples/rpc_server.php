@@ -16,5 +16,6 @@ $config->setRunDir(__DIR__);
 $config->setLogDir(__DIR__ . '/logs');
 $config->setLogLevel();
 $config->registerApp('App', __DIR__);
+$config->setTaskWorkerNum(1);
 $server = new Serverx\Serv\RPCServer($config);
 $server->run();
