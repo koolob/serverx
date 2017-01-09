@@ -77,7 +77,7 @@ abstract class BaseServ
             'extension' => date('H') . '.log',
         ));
         if ($this->worker_start_callback != null && is_callable($this->worker_start_callback)) {
-            call_user_func($this->worker_start_callback, $serv);
+            call_user_func($this->worker_start_callback, $this);
         }
     }
 
@@ -240,5 +240,10 @@ abstract class BaseServ
     public function enableRequestLog()
     {
         $this->enableRequestLog = true;
+    }
+
+    public function stopWorker()
+    {
+        $this->swoole_server->stop();
     }
 }
