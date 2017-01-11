@@ -81,12 +81,19 @@ class TCP
         if ($success) {
             $rev = $this->swoole_client->recv();
             if ($rev === false) {
+                self::release($this->key);
                 $result['code'] = $this->getErrorCode();
                 $result['msg'] = $this->getErrorMessage();
+                if ($result['code'] == 0) {
+                    $result['code'] = 2;
+                }
             } elseif (empty($rev)) {
                 self::release($this->key);
                 $result['code'] = $this->getErrorCode();
                 $result['msg'] = $this->getErrorMessage();
+                if ($result['code'] == 0) {
+                    $result['code'] = 3;
+                }
             } else {
                 $result['data'] = TCPProtocol::decode($rev);
             }
@@ -94,6 +101,9 @@ class TCP
             self::release($this->key);
             $result['code'] = $this->getErrorCode();
             $result['msg'] = $this->getErrorMessage();
+            if ($result['code'] == 0) {
+                $result['code'] = 4;
+            }
         }
         return $result;
     }
