@@ -78,6 +78,7 @@ class HttpServer extends BaseServ
                 'POST' => $post,
                 'HEADER' => $request->header,
                 'SERVER' => $request->server,
+                'POSTDATA' => $request->rawContent(),
             );
 
             if (isset($request->header['accept-encoding'])) {
