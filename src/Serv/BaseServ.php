@@ -165,7 +165,7 @@ abstract class BaseServ
         if (empty($data)) {
             $data = $controllerClass->$actionMethod($params);
         }
-        if ($this->enableRequestLog) {
+        if ($this->enableRequestLog && $controllerClass->isEnableRequestLog()) {
             $ret = is_array($data) ? json_encode($data) : $data;
             $this->info("[REQUEST][$controller][$action][--" . json_encode($params) . "--][RESPONSE][--" . $ret . "--]");
         }

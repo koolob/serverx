@@ -15,6 +15,8 @@ class BaseController
 {
     protected $serv;
 
+    private $enableRequestLog = true;
+
     private $alias = array();
 
     private $extras = array();
@@ -60,5 +62,15 @@ class BaseController
     public function beforeMethod($controller, $action, $params)
     {
         return null;
+    }
+
+    protected function disableRequestLog()
+    {
+        $this->enableRequestLog = false;
+    }
+
+    public function isEnableRequestLog()
+    {
+        return $this->enableRequestLog;
     }
 }
