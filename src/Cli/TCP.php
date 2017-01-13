@@ -23,7 +23,6 @@ class TCP
     {
         $key = $serverHost . ':' . $serverPort;
         $this->swoole_client = new \swoole_client(SWOOLE_SOCK_TCP | SWOOLE_KEEP);
-        $this->swoole_client->connect($serverHost, $serverPort, $timeout);
         $this->swoole_client->set(array(
             'open_length_check' => true,
             'package_length_type' => 'N',
@@ -31,6 +30,7 @@ class TCP
             'package_length_offset' => 0,
             'package_body_offset' => 4,
         ));
+        $this->swoole_client->connect($serverHost, $serverPort, $timeout);
         $this->key = $key;
     }
 
