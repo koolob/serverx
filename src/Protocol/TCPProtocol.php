@@ -14,12 +14,14 @@ class TCPProtocol
 
     public static function encode($data)
     {
-        $body = gzcompress($data, 3);
+//        $body = gzcompress($data, 3);
+        $body = gzencode($data, 3);
         return pack('N', strlen($body)) . $body;
     }
 
     public static function decode($data)
     {
-        return gzuncompress(substr($data, 4));
+//        return gzuncompress(substr($data, 4));
+        return gzdecode(substr($data, 4));
     }
 }
