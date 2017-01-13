@@ -12,7 +12,7 @@ namespace Serverx\Protocol;
 class TCPProtocol
 {
 
-    public static function encode($data, $gzip = false)
+    public static function encode($data, $gzip = true)
     {
         if ($gzip) {
             $body = gzcompress($data, 3);
@@ -22,7 +22,7 @@ class TCPProtocol
         return pack('N', strlen($body)) . $body;
     }
 
-    public static function decode($data, $gzip = false)
+    public static function decode($data, $gzip = true)
     {
         if ($gzip) {
             return gzuncompress(substr($data, 4));
