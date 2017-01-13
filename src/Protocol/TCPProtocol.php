@@ -12,14 +12,22 @@ namespace Serverx\Protocol;
 class TCPProtocol
 {
 
-    public static function encode($data)
+    public static function encode($data, $gzip = false)
     {
-        $body = gzcompress($data, 3);
+        if ($gzip) {
+            $body = gzcompress($data, 3);
+        } else {
+            $body = $data;
+        }
         return pack('N', strlen($body)) . $body;
     }
 
-    public static function decode($data)
+    public static function decode($data, $gzip = false)
     {
-        return gzuncompress(substr($data, 4));
+        if ($gzip) {
+            return gzuncompress(substr($data, 4));
+        } else {
+            return substr($data, 4);
+        }
     }
 }
