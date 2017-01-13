@@ -18,4 +18,13 @@ class Index extends \Serverx\Controller\BaseController
         $tasker->run(array('hi' => 1));
         return array("hi" => "1");
     }
+
+    public function long($params)
+    {
+        $data = "";
+        for ($i = 0; $i < 10000; $i++) {
+            $data .= 'a';
+        }
+        return array('data' => $data);
+    }
 }
