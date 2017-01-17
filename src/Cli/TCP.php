@@ -111,7 +111,7 @@ class TCP
     public function ping()
     {
         $pong = $this->getResult('PING');
-        if ($pong == 'PONG') {
+        if ($pong['data'] == 'PONG') {
             return true;
         }
         return false;
