@@ -37,6 +37,9 @@ class TCP
     private function close()
     {
         $this->swoole_client->close();
+        if (!empty(self::$_instances[$this->key])) {
+            unset(self::$_instances[$this->key]);
+        }
     }
 
     private function getErrorCode()
@@ -81,14 +84,16 @@ class TCP
         if ($success) {
             $rev = $this->swoole_client->recv();
             if ($rev === false) {
-                self::release($this->key);
+//                self::release($this->key);
+                $this->close();
                 $result['code'] = $this->getErrorCode();
                 $result['msg'] = $this->getErrorMessage();
                 if ($result['code'] == 0) {
                     $result['code'] = 2;
                 }
             } elseif (empty($rev)) {
-                self::release($this->key);
+//                self::release($this->key);
+                $this->close();
                 $result['code'] = $this->getErrorCode();
                 $result['msg'] = $this->getErrorMessage();
                 if ($result['code'] == 0) {
@@ -98,7 +103,8 @@ class TCP
                 $result['data'] = TCPProtocol::decode($rev);
             }
         } else {
-            self::release($this->key);
+//            self::release($this->key);
+            $this->close();
             $result['code'] = $this->getErrorCode();
             $result['msg'] = $this->getErrorMessage();
             if ($result['code'] == 0) {

@@ -14,8 +14,8 @@ class Index extends \Serverx\Controller\BaseController
 {
     public function index($params)
     {
-        $tasker = new SlowTasker($this->serv);
-        $tasker->run(array('hi' => 1));
+//        $tasker = new SlowTasker($this->serv);
+//        $tasker->run(array('hi' => 1));
         return array("hi" => "1");
     }
 

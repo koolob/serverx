@@ -14,7 +14,7 @@ $config->setDaemonize(0);
 $config->setRunDir(__DIR__);
 $config->setLogDir(__DIR__ . '/logs');
 $config->setLogLevel();
-$config->setMaxRequest(10);
+$config->setMaxRequest(10000);
 $config->setDispatchMode(3);
 $config->registerApp('App', __DIR__);
 $server = new \Serverx\Serv\HttpServer($config);
