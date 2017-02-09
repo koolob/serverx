@@ -346,18 +346,22 @@ class ServerConfig
             $this->addConfig($config, 'task_ipc_mode', $this->getTaskIpcMode());
             $this->addConfig($config, 'task_max_request', $this->getTaskMaxRequest());
         }
-
         if (!empty($this->runDir)) {
-            $this->addConfig($config, 'log_file', $this->runDir . DIRECTORY_SEPARATOR . 'serverx.log');
+            $this->addConfig($config, 'log_file', $this->runDir . DIRECTORY_SEPARATOR . 'run' . DIRECTORY_SEPARATOR . 'serverx.log', true);
         }
-
         return $config;
     }
 
-    private function addConfig(&$array, $key, $val)
+    private function addConfig(&$array, $key, $val, $notNum = false)
     {
-        if (!empty($val) && $val > 0) {
-            $array[$key] = $val;
+        if (!empty($val)) {
+            if ($notNum) {
+                $array[$key] = $val;
+            } else {
+                if ($val > 0) {
+                    $array[$key] = $val;
+                }
+            }
         }
     }
 
