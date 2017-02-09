@@ -333,7 +333,8 @@ class ServerConfig
     public function toSwooleConfigArray()
     {
         $config = array(
-            'worker_num' => $this->getWorkerNum()
+            'worker_num' => $this->getWorkerNum(),
+            'daemonize' => $this->getDaemonize(),
         );
 
         $this->addConfig($config, 'reactor_num', $this->getReactorNum());
