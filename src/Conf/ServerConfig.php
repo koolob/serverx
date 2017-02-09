@@ -347,6 +347,10 @@ class ServerConfig
             $this->addConfig($config, 'task_max_request', $this->getTaskMaxRequest());
         }
 
+        if (!empty($this->runDir)) {
+            $this->addConfig($config, 'log_file', $this->runDir . DIRECTORY_SEPARATOR . 'serverx.log');
+        }
+
         return $config;
     }
 
