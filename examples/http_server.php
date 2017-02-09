@@ -10,6 +10,8 @@ date_default_timezone_set("UTC");
 require_once __DIR__ . "/../vendor/autoload.php";
 
 $config = new \Serverx\Conf\ServerConfig();
+$config->setHost('0.0.0.0');
+$config->setPort('8080');
 $config->setDaemonize(0);
 $config->setRunDir(__DIR__);
 $config->setLogDir(__DIR__ . '/logs');

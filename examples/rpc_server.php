@@ -10,6 +10,7 @@ date_default_timezone_set("UTC");
 require_once __DIR__ . "/../vendor/autoload.php";
 
 $config = new \Serverx\Conf\TCPServerConfig();
+$config->setHost('0.0.0.0');
 $config->setPort(9797);
 $config->setDaemonize(0);
 $config->setRunDir(__DIR__);
