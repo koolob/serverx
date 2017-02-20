@@ -18,6 +18,8 @@ class HttpServer extends BaseServ
 {
     const HANDLE_TYPE_HTTP = 1;
 
+    private $gzip = true;
+
     protected function initSwooleServer(ServerConfig $config)
     {
         $server = new \swoole_http_server($config->getHost(), $config->getPort());
@@ -85,7 +87,7 @@ class HttpServer extends BaseServ
             if (isset($request->header['accept-encoding'])) {
                 $accept_encoding = $request->header['accept-encoding'];
                 if (strpos($accept_encoding, 'gzip') !== false) {
-                    $response->gzip(3);
+//                    $response->gzip(3);
                 }
             }
 
