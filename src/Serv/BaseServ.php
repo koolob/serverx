@@ -222,6 +222,10 @@ abstract class BaseServ
         return $this->swoole_server->stats();
     }
 
+    public function reload(){
+        return $this->swoole_server->reload();
+    }
+
     public function run_task($data)
     {
         $this->swoole_server->task($data);
