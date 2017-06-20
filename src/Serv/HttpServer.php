@@ -81,6 +81,8 @@ class HttpServer extends BaseServ
                 'POST' => $post,
                 'HEADER' => $request->header,
                 'SERVER' => $request->server,
+                'COOKIE' => $request->cookie,
+                'FILES' => $request->files,
                 'POSTDATA' => $request->rawContent(),
             );
 
