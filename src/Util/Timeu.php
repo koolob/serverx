@@ -16,4 +16,14 @@ class Timeu
     {
         return (int)(microtime(true) * 1000);
     }
+
+    /**
+     * 当前微妙时间戳
+     * @return int
+     */
+    public static function microTimestamp()
+    {
+        list($usec, $sec) = explode(" ", microtime());
+        return $sec . sprintf("%06d", $usec * 1000000);
+    }
 }
