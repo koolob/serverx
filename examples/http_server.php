@@ -21,7 +21,7 @@ $config->setDispatchMode(3);
 $config->registerApp('App', __DIR__);
 $server = new \Serverx\Serv\HttpServer($config);
 //$server->addHandleTypes(\Serverx\Serv\HttpServer::HANDLE_TYPE_HTTP, array(
-//    'system.health',
-//    'system.status',
+//    'system.health',//可用于健康检查
+//    'system.status',//可用于监控信息
 //));
 $server->run();
